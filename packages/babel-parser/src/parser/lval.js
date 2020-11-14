@@ -368,9 +368,11 @@ export default class LValParser extends NodeUtils {
     startPos = startPos ?? this.state.start;
     // $FlowIgnore
     left = left ?? this.parseBindingAtom();
-    if (!this.eat(tt.eq)) return left;
+    const operator = this.state.value;
+    if (!this.eat(tt.assign) && !this.eat(tt.eq)) return left;
 
     const node = this.startNodeAt(startPos, startLoc);
+    node.operator = operator;
     node.left = left;
     node.right = this.parseMaybeAssignAllowIn();
     return this.finishNode(node, "AssignmentPattern");
